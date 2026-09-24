@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Shop carefully selected pre-owned vehicles from NGM Motors in Los Angeles. View details, explore inventory, and contact our team.">
+  <title>NGM Motors | Quality Pre-Owned Cars in Los Angeles</title>
+  <style>
+    :root {
+      --bg: #0b0b0d;
+      --panel: #17171a;
+      --panel-2: #202024;
+      --text: #fff;
+      --muted: rgba(255,255,255,.66);
+      --faint: rgba(255,255,255,.42);
+      --line: rgba(255,255,255,.12);
+      --accent: #d6ff4f;
+      --ink: #111113;
+      --radius: 14px;
+      --shadow: 0 24px 70px rgba(0,0,0,.4);
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    body.modal-open { overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+    button, select { cursor: pointer; }
+    img { display: block; max-width: 100%; }
+    h1, h2, h3, p { margin-top: 0; }
+    .container { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(11,11,13,.86);
+      backdrop-filter: blur(18px);
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 28px; min-height: 76px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--accent);
+      color: var(--ink);
+      font-weight: 950;
+      letter-spacing: -.08em;
+    }
+    .brand-name { display: block; font-size: 18px; font-weight: 900; line-height: 1; }
+    .brand-note { display: block; margin-top: 4px; color: var(--faint); font-size: 11px; }
+    .nav { display: flex; gap: 28px; color: var(--muted); font-size: 14px; }
+    .nav a:hover { color: var(--text); }
+    .button {
+      display: inline-flex;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 0 22px;
+      font-weight: 850;
+      transition: transform .16s ease, background .16s ease, border-color .16s ease;
+    }
+    .button:hover { transform: translateY(-1px); }
+    .button-primary { background: var(--accent); color: var(--ink); }
+    .button-primary:hover { background: #e2ff76; }
+    .button-ghost { border-color: var(--line); background: rgba(255,255,255,.05); color: var(--text); }
+    .button-ghost:hover { background: rgba(255,255,255,.1); }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 12% 15%, rgba(214,255,79,.14), transparent 30%),
+        radial-gradient(circle at 86% 30%, rgba(125,211,252,.1), transparent 26%),
+        var(--bg);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(to bottom, #000, transparent 80%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 56px; min-height: 680px; padding: 70px 0; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 22px; color: var(--muted); font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
+    .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 18px var(--accent); }
+    h1 { max-width: 700px; margin-bottom: 24px; font-size: clamp(48px, 7.4vw, 86px); line-height: .95; letter-spacing: -.055em; }
+    .hero-copy { max-width: 620px; margin-bottom: 32px; color: var(--muted); font-size: 19px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-proof { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 30px; color: var(--faint); font-size: 13px; }
+    .hero-proof span { display: flex; align-items: center; gap: 7px; }
+    .hero-proof i { color: var(--accent); font-style: normal; }
+    .hero-visual { position: relative; min-height: 470px; }
+    .hero-car {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+    .hero-card { position: absolute; right: -18px; bottom: 24px; width: min(310px, 78%); border: 1px solid var(--line); border-radius: var(--radius); background: rgba(15,15,17,.88); padding: 22px; backdrop-filter: blur(18px); box-shadow: var(--shadow); }
+    .hero-card-label { margin-bottom: 7px; color: var(--accent); font-size: 11px; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
+    .hero-card strong { display: block; margin-bottom: 3px; font-size: 22px; }
+    .hero-card p { margin: 0; color: var(--muted); font-size: 13px; }
+
+    .trust-strip { border-bottom: 1px solid var(--line); background: rgba(255,255,255,.035); }
+    .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 22px 0; }
+    .trust-item { display: flex; align-items: center; gap: 10px; border-right: 1px solid var(--line); color: var(--muted); font-size: 13px; font-weight: 750; }
+    .trust-item:last-child { border-right: 0; }
+    .trust-icon { display: grid; width: 32px; height: 32px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: rgba(214,255,79,.1); color: var(--accent); }
+
+    .section { padding: 92px 0; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 34px; }
+    .kicker { margin-bottom: 10px; color: var(--accent); font-size: 12px; font-weight: 900; letter-spacing: .15em; text-transform: uppercase; }
+    h2 { margin-bottom: 0; font-size: clamp(36px, 5vw, 58px); line-height: 1; letter-spacing: -.04em; }
+    .section-note { max-width: 430px; margin: 0; color: var(--muted); }
+    .filters { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 12px; margin-bottom: 26px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); padding: 14px; }
+    .control { width: 100%; min-height: 50px; border: 1px solid var(--line); border-radius: 8px; outline: 0; background: rgba(255,255,255,.055); color: var(--text); padding: 0 14px; }
+    .control:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(214,255,79,.1); }
+    select.control { appearance: none; }
+    select.control option { background: var(--panel); }
+    .inventory-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px; }
+    .vehicle-card { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); transition: transform .18s ease, border-color .18s ease; }
+    .vehicle-card:hover { transform: translateY(-4px); border-color: rgba(214,255,79,.35); }
+    .vehicle-image-wrap { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--panel-2); cursor: pointer; }
+    .vehicle-image { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
+    .vehicle-card:hover .vehicle-image { transform: scale(1.025); }
+    .vehicle-badge { position: absolute; left: 14px; top: 14px; border-radius: 999px; background: var(--accent); color: var(--ink); padding: 7px 11px; font-size: 10px; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
+    .photo-count { position: absolute; right: 14px; bottom: 14px; border: 1px solid var(--line); border-radius: 999px; background: rgba(11,11,13,.75); padding: 6px 10px; font-size: 11px; backdrop-filter: blur(10px); }
+    .vehicle-body { padding: 20px; }
+    .vehicle-title-row { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
+    .vehicle-title { margin-bottom: 5px; font-size: 21px; line-height: 1.15; }
+    .vehicle-trim { margin-bottom: 0; color: var(--muted); font-size: 13px; }
+    .vehicle-price { color: var(--accent); font-size: 21px; font-weight: 900; white-space: nowrap; }
+    .vehicle-specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 18px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 14px 0; }
+    .spec { border-right: 1px solid var(--line); }
+    .spec:last-child { border-right: 0; }
+    .spec span { display: block; color: var(--faint); font-size: 10px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+    .spec strong { display: block; margin-top: 3px; font-size: 13px; }
+    .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .card-actions .button { min-height: 43px; padding: 0 14px; font-size: 13px; }
+    .empty { grid-column: 1/-1; border: 1px dashed var(--line); border-radius: var(--radius); padding: 54px 20px; color: var(--muted); text-align: center; }
+
+    .process { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #f4f2ed; color: var(--ink); }
+    .process .kicker { color: #63751f; }
+    .process-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 38px; }
+    .process-card { border: 1px solid rgba(17,17,19,.1); border-radius: var(--radius); background: #fff; padding: 26px; }
+    .process-number { display: grid; width: 38px; height: 38px; margin-bottom: 22px; place-items: center; border-radius: 50%; background: var(--accent); font-weight: 950; }
+    .process-card h3 { margin-bottom: 10px; font-size: 20px; }
+    .process-card p { margin-bottom: 0; color: #626267; font-size: 14px; }
+
+    .contact-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 52px; align-items: start; }
+    .contact-copy p:not(.kicker) { margin: 22px 0 28px; color: var(--muted); font-size: 17px; }
+    .contact-links { display: grid; gap: 10px; }
+    .contact-link { display: flex; align-items: center; gap: 13px; color: var(--muted); }
+    .contact-link strong { color: var(--text); }
+    .contact-form { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; border-radius: var(--radius); background: #fff; color: var(--ink); padding: 30px; box-shadow: var(--shadow); }
+    .field { display: grid; gap: 6px; font-size: 12px; font-weight: 800; }
+    .field-full { grid-column: 1/-1; }
+    .field input, .field select, .field textarea { width: 100%; border: 1px solid #d8d7d2; border-radius: 8px; background: #fff; color: var(--ink); outline: 0; padding: 13px; }
+    .field input, .field select { min-height: 50px; }
+    .field textarea { min-height: 100px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(17,17,19,.08); }
+    .contact-form .button { grid-column: 1/-1; width: 100%; }
+    .form-note { grid-column: 1/-1; margin: 0; color: #6d6d72; font-size: 11px; text-align: center; }
+    .form-success { display: none; grid-column: 1/-1; border-radius: 8px; background: #eaf7cf; padding: 12px; color: #344409; font-size: 13px; font-weight: 800; text-align: center; }
+    .form-success.visible { display: block; }
+
+    .footer { border-top: 1px solid var(--line); padding: 28px 0; color: var(--faint); font-size: 13px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 20px; }
+    .footer-links { display: flex; gap: 18px; }
+    .footer a:hover { color: var(--text); }
+
+    .modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; background: rgba(0,0,0,.78); opacity: 0; visibility: hidden; transition: opacity .18s ease, visibility .18s ease; backdrop-filter: blur(10px); }
+    .modal.open { opacity: 1; visibility: visible; }
+    .modal-card { position: relative; display: grid; grid-template-columns: 1.15fr .85fr; width: min(1060px,100%); max-height: calc(100vh - 40px); overflow: auto; border: 1px solid var(--line); border-radius: 18px; background: var(--panel); box-shadow: var(--shadow); }
+    .modal-gallery { position: sticky; top: 0; min-height: 610px; background: var(--panel-2); }
+    .modal-image { width: 100%; height: 100%; object-fit: cover; }
+    .gallery-nav { position: absolute; inset: auto 18px 18px; display: flex; justify-content: space-between; }
+    .gallery-button { display: grid; width: 44px; height: 44px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: rgba(11,11,13,.75); color: var(--text); backdrop-filter: blur(8px); }
+    .modal-content { padding: 38px; }
+    .modal-close { position: absolute; z-index: 2; top: 14px; right: 14px; display: grid; width: 40px; height: 40px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: rgba(11,11,13,.8); color: var(--text); font-size: 22px; }
+    .modal-content h2 { margin-bottom: 6px; font-size: 36px; }
+    .modal-price { margin: 18px 0; color: var(--accent); font-size: 34px; font-weight: 950; }
+    .modal-description { color: var(--muted); }
+    .modal-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin: 24px 0; }
+    .modal-spec { border-radius: 8px; background: rgba(255,255,255,.055); padding: 13px; }
+    .modal-spec span { display: block; color: var(--faint); font-size: 10px; font-weight: 850; text-transform: uppercase; letter-spacing: .08em; }
+    .modal-spec strong { display: block; margin-top: 4px; font-size: 14px; }
+    .feature-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 18px 0 28px; padding: 0; list-style: none; color: var(--muted); font-size: 13px; }
+    .feature-list li::before { content: "\2713"; margin-right: 7px; color: var(--accent); font-weight: 900; }
+    .modal-actions { display: grid; gap: 9px; }
+
+    @media (max-width: 980px) {
+      .nav { display: none; }
+      .hero-inner { grid-template-columns: 1fr; min-height: auto; }
+      .hero-visual { min-height: 520px; }
+      .inventory-grid { grid-template-columns: repeat(2,1fr); }
+      .filters { grid-template-columns: 1fr 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .modal-card { grid-template-columns: 1fr; }
+      .modal-gallery { position: relative; min-height: 430px; }
+    }
+    @media (max-width: 680px) {
+      .container { width: min(100% - 24px,1180px); }
+      .header-inner { min-height: 68px; }
+      .header-inner > .button { display: none; }
+      .hero-inner { gap: 38px; padding: 52px 0; }
+      .hero-visual { min-height: 380px; }
+      .hero-card { right: 12px; bottom: 12px; }
+      .trust-grid { grid-template-columns: 1fr 1fr; }
+      .trust-item { border-right: 0; }
+      .section { padding: 64px 0; }
+      .section-head { align-items: stretch; flex-direction: column; }
+      .filters, .inventory-grid, .process-grid { grid-template-columns: 1fr; }
+      .filters .button { width: 100%; }
+      .contact-form { grid-template-columns: 1fr; padding: 22px; }
+      .field-full, .contact-form .button, .form-note, .form-success { grid-column: auto; }
+      .footer-inner { flex-direction: column; }
+      .modal { padding: 0; }
+      .modal-card { max-height: 100vh; min-height: 100vh; border: 0; border-radius: 0; }
+      .modal-gallery { min-height: 310px; }
+      .modal-content { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="NGM Motors home">
+        <span class="brand-mark">NG</span>
+        <span><span class="brand-name">NGM Motors</span><span class="brand-note">Powered by FindMyCar LA</span></span>
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#inventory">Inventory</a><a href="#why-us">Why NGM</a><a href="#contact">Contact</a>
+      </nav>
+      <a class="button button-primary" href="#contact">Get in Touch</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-inner">
+        <div>
+          <p class="eyebrow">Los Angeles pre-owned vehicles</p>
+          <h1>Good cars.<br>Clear answers.</h1>
+          <p class="hero-copy">A focused selection of quality pre-owned vehicles, presented with the details you need and none of the dealership runaround.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#inventory">Browse Inventory</a>
+            <a class="button button-ghost" href="tel:+18184233683">Call (818) 423-3683</a>
+          </div>
+          <div class="hero-proof"><span><i>&check;</i> Transparent vehicle details</span><span><i>&check;</i> No-pressure communication</span><span><i>&check;</i> Los Angeles based</span></div>
+        </div>
+        <div class="hero-visual">
+          <img class="hero-car" src="assets/lexus-rx-350.png" alt="Pearl white Lexus RX 350">
+          <div class="hero-card"><p class="hero-card-label">Featured arrival</p><strong>2021 Lexus RX 350</strong><p>Luxury, comfort, and a clean history.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust-strip" aria-label="Dealer benefits">
+      <div class="container trust-grid">
+        <div class="trust-item"><span class="trust-icon">&check;</span> Carefully selected inventory</div>
+        <div class="trust-item"><span class="trust-icon">$</span> Straightforward pricing</div>
+        <div class="trust-item"><span class="trust-icon">i</span> Vehicle history available</div>
+        <div class="trust-item"><span class="trust-icon">+</span> Trade-ins considered</div>
+      </div>
+    </section>
+
+    <section id="inventory" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div><p class="kicker">Available now</p><h2>Current Inventory</h2></div>
+          <p class="section-note">Every vehicle is shown with key specs, pricing, and a direct way to reach our team.</p>
+        </div>
+        <div class="filters">
+          <input id="search" class="control" type="search" placeholder="Search make, model or year" aria-label="Search inventory">
+          <select id="bodyFilter" class="control" aria-label="Filter by body style"><option value="">All Body Styles</option><option>SUV</option><option>Sedan</option></select>
+          <select id="priceFilter" class="control" aria-label="Filter by price"><option value="">Any Price</option><option value="20000">Under $20,000</option><option value="25000">Under $25,000</option><option value="30000">Under $30,000</option></select>
+          <button id="clearFilters" class="button button-ghost" type="button">Clear</button>
+        </div>
+        <div id="inventoryGrid" class="inventory-grid"></div>
+      </div>
+    </section>
+
+    <section id="why-us" class="section process">
+      <div class="container">
+        <p class="kicker">A better dealership experience</p><h2>Simple from hello to keys.</h2>
+        <div class="process-grid">
+          <article class="process-card"><span class="process-number">1</span><h3>Explore the details</h3><p>Review photos, mileage, equipment, condition notes, and pricing before you reach out.</p></article>
+          <article class="process-card"><span class="process-number">2</span><h3>Talk to a real person</h3><p>Ask questions, request a walkaround video, or arrange a time to see the vehicle.</p></article>
+          <article class="process-card"><span class="process-number">3</span><h3>Buy with clarity</h3><p>We keep the conversation direct so you know what you are buying and what comes next.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <div class="container contact-grid">
+        <div class="contact-copy">
+          <p class="kicker">Let's talk</p><h2>Found something you like?</h2>
+          <p>Tell us which vehicle caught your eye. We can answer questions, share more photos, or arrange a viewing.</p>
+          <div class="contact-links"><a class="contact-link" href="tel:+18184233683"><span class="trust-icon">#</span><span><strong>(818) 423-3683</strong><br>Call or text us</span></a><span class="contact-link"><span class="trust-icon">LA</span><span><strong>Los Angeles, California</strong><br>Viewing by appointment</span></span></div>
+        </div>
+        <form id="leadForm" class="contact-form" action="https://formspree.io/f/mrededgd" method="POST">
+          <label class="field">Your Name<input name="name" type="text" placeholder="Full name" required></label>
+          <label class="field">Phone Number<input name="phone" type="tel" placeholder="(818) 555-0123" required></label>
+          <label class="field field-full">Vehicle<select id="vehicleSelect" name="vehicle"><option value="">General question</option></select></label>
+          <label class="field field-full">How can we help?<textarea name="message" placeholder="I'd like to schedule a viewing..."></textarea></label>
+          <button class="button button-primary" type="submit">Send My Request</button>
+          <p id="formSuccess" class="form-success">Thanks - we received your request and will be in touch shortly.</p>
+          <p class="form-note">By submitting, you agree that NGM Motors may contact you about your request.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container footer-inner"><span>&copy; 2026 NGM Motors. Los Angeles, California.</span><span class="footer-links"><a href="https://fndmycar.com/">FindMyCar LA</a><a href="https://fndmycar.com/privacy.html">Privacy</a><a href="#inventory">Inventory</a></span></div></footer>
+
+  <div id="vehicleModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-card">
+      <button id="modalClose" class="modal-close" type="button" aria-label="Close vehicle details">&times;</button>
+      <div class="modal-gallery"><img id="modalImage" class="modal-image" src="" alt=""><div class="gallery-nav"><button id="galleryPrev" class="gallery-button" type="button" aria-label="Previous photo">&larr;</button><button id="galleryNext" class="gallery-button" type="button" aria-label="Next photo">&rarr;</button></div></div>
+      <div class="modal-content"><p id="modalBadge" class="kicker"></p><h2 id="modalTitle"></h2><p id="modalTrim" class="vehicle-trim"></p><div id="modalPrice" class="modal-price"></div><p id="modalDescription" class="modal-description"></p><div id="modalSpecs" class="modal-specs"></div><h3>Highlights</h3><ul id="modalFeatures" class="feature-list"></ul><div class="modal-actions"><button id="modalInquiry" class="button button-primary" type="button">Ask About This Vehicle</button><a class="button button-ghost" href="tel:+18184233683">Call (818) 423-3683</a></div></div>
+    </div>
+  </div>
+
+  <script>
+    const vehicles = [
+      { id: "lexus-rx", year: 2021, make: "Lexus", model: "RX 350", trim: "Premium Package", body: "SUV", price: 28900, miles: 48210, drivetrain: "FWD", color: "Pearl White", badge: "Featured", images: ["assets/lexus-rx-350.png"], description: "A refined midsize SUV with a quiet cabin, smooth V6 power, and the comfort features that make every drive feel easy.", features: ["Clean history report", "Leather interior", "Navigation", "Blind spot monitor", "Power liftgate", "Keyless entry"] },
+      { id: "bmw-330i", year: 2020, make: "BMW", model: "330i", trim: "M Sport", body: "Sedan", price: 24900, miles: 56140, drivetrain: "RWD", color: "Mineral Gray", badge: "New Arrival", images: ["assets/bmw-330i.png"], description: "A balanced sport sedan with responsive handling, strong turbocharged performance, and a thoughtfully finished interior.", features: ["M Sport package", "Apple CarPlay", "Backup camera", "LED headlights", "Sport seats", "Parking sensors"] },
+      { id: "camry-se", year: 2022, make: "Toyota", model: "Camry SE", trim: "SE Nightshade", body: "Sedan", price: 21900, miles: 39870, drivetrain: "FWD", color: "Blueprint Blue", badge: "Great Value", images: ["assets/toyota-camry.png"], description: "A sharp, efficient daily driver with proven reliability, modern safety technology, and excellent long-term value.", features: ["Toyota Safety Sense", "Apple CarPlay", "Lane assist", "Backup camera", "Black alloy wheels", "Bluetooth"] }
+    ];
+
+    const grid = document.querySelector("#inventoryGrid");
+    const search = document.querySelector("#search");
+    const bodyFilter = document.querySelector("#bodyFilter");
+    const priceFilter = document.querySelector("#priceFilter");
+    const modal = document.querySelector("#vehicleModal");
+    const vehicleSelect = document.querySelector("#vehicleSelect");
+    let activeVehicle = null;
+    let galleryIndex = 0;
+
+    const money = value => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
+    const number = value => new Intl.NumberFormat("en-US").format(value);
+
+    function renderInventory() {
+      const query = search.value.toLowerCase().trim();
+      const body = bodyFilter.value;
+      const maxPrice = Number(priceFilter.value) || Infinity;
+      const filtered = vehicles.filter(vehicle => `${vehicle.year} ${vehicle.make} ${vehicle.model} ${vehicle.trim}`.toLowerCase().includes(query) && (!body || vehicle.body === body) && vehicle.price <= maxPrice);
+      grid.innerHTML = "";
+      if (!filtered.length) { grid.innerHTML = '<p class="empty">No vehicles match those filters. Try broadening your search.</p>'; return; }
+      filtered.forEach(vehicle => {
+        const card = document.createElement("article");
+        card.className = "vehicle-card";
+        card.innerHTML = `<div class="vehicle-image-wrap" data-details="${vehicle.id}"><img class="vehicle-image" src="${vehicle.images[0]}" alt="${vehicle.year} ${vehicle.make} ${vehicle.model}"><span class="vehicle-badge">${vehicle.badge}</span><span class="photo-count">View photos</span></div><div class="vehicle-body"><div class="vehicle-title-row"><div><h3 class="vehicle-title">${vehicle.year} ${vehicle.make} ${vehicle.model}</h3><p class="vehicle-trim">${vehicle.trim}</p></div><strong class="vehicle-price">${money(vehicle.price)}</strong></div><div class="vehicle-specs"><div class="spec"><span>Mileage</span><strong>${number(vehicle.miles)} mi</strong></div><div class="spec"><span>Drive</span><strong>${vehicle.drivetrain}</strong></div><div class="spec"><span>Body</span><strong>${vehicle.body}</strong></div></div><div class="card-actions"><button class="button button-ghost" type="button" data-details="${vehicle.id}">View Details</button><button class="button button-primary" type="button" data-inquire="${vehicle.id}">I'm Interested</button></div></div>`;
+        grid.appendChild(card);
+      });
+    }
+
+    function openModal(id) {
+      activeVehicle = vehicles.find(vehicle => vehicle.id === id);
+      if (!activeVehicle) return;
+      galleryIndex = 0;
+      document.querySelector("#modalBadge").textContent = activeVehicle.badge;
+      document.querySelector("#modalTitle").textContent = `${activeVehicle.year} ${activeVehicle.make} ${activeVehicle.model}`;
+      document.querySelector("#modalTrim").textContent = activeVehicle.trim;
+      document.querySelector("#modalPrice").textContent = money(activeVehicle.price);
+      document.querySelector("#modalDescription").textContent = activeVehicle.description;
+      document.querySelector("#modalImage").src = activeVehicle.images[0];
+      document.querySelector("#modalImage").alt = `${activeVehicle.year} ${activeVehicle.make} ${activeVehicle.model}`;
+      document.querySelector(".gallery-nav").hidden = activeVehicle.images.length < 2;
+      document.querySelector("#modalSpecs").innerHTML = [["Mileage", `${number(activeVehicle.miles)} miles`],["Drivetrain", activeVehicle.drivetrain],["Exterior", activeVehicle.color],["Body Style", activeVehicle.body]].map(([label,value]) => `<div class="modal-spec"><span>${label}</span><strong>${value}</strong></div>`).join("");
+      document.querySelector("#modalFeatures").innerHTML = activeVehicle.features.map(feature => `<li>${feature}</li>`).join("");
+      modal.classList.add("open"); modal.setAttribute("aria-hidden", "false"); document.body.classList.add("modal-open"); document.querySelector("#modalClose").focus();
+    }
+    function closeModal() { modal.classList.remove("open"); modal.setAttribute("aria-hidden", "true"); document.body.classList.remove("modal-open"); }
+    function selectVehicle(id) { const vehicle = vehicles.find(item => item.id === id); vehicleSelect.value = id; closeModal(); document.querySelector("#contact").scrollIntoView({ behavior: "smooth" }); setTimeout(() => document.querySelector('#leadForm input[name="name"]').focus(), 550); }
+
+    vehicles.forEach(vehicle => { const option = document.createElement("option"); option.value = vehicle.id; option.textContent = `${vehicle.year} ${vehicle.make} ${vehicle.model}`; vehicleSelect.appendChild(option); });
+    grid.addEventListener("click", event => { const details = event.target.closest("[data-details]"); const inquiry = event.target.closest("[data-inquire]"); if (details) openModal(details.dataset.details); if (inquiry) selectVehicle(inquiry.dataset.inquire); });
+    [search, bodyFilter, priceFilter].forEach(control => control.addEventListener("input", renderInventory));
+    document.querySelector("#clearFilters").addEventListener("click", () => { search.value = ""; bodyFilter.value = ""; priceFilter.value = ""; renderInventory(); });
+    document.querySelector("#modalClose").addEventListener("click", closeModal);
+    modal.addEventListener("click", event => { if (event.target === modal) closeModal(); });
+    document.addEventListener("keydown", event => { if (event.key === "Escape") closeModal(); });
+    document.querySelector("#modalInquiry").addEventListener("click", () => selectVehicle(activeVehicle.id));
+    document.querySelector("#galleryPrev").addEventListener("click", () => { galleryIndex = galleryIndex ? galleryIndex - 1 : activeVehicle.images.length - 1; document.querySelector("#modalImage").src = activeVehicle.images[galleryIndex]; });
+    document.querySelector("#galleryNext").addEventListener("click", () => { galleryIndex = (galleryIndex + 1) % activeVehicle.images.length; document.querySelector("#modalImage").src = activeVehicle.images[galleryIndex]; });
+    document.querySelector("#leadForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const success = document.querySelector("#formSuccess");
+      success.classList.remove("visible");
+      try {
+        const response = await fetch(form.action, { method: form.method, body: new FormData(form), headers: { Accept: "application/json" } });
+        if (!response.ok) throw new Error("Request failed");
+        success.textContent = "Thanks - we received your request and will be in touch shortly.";
+        success.classList.add("visible");
+        form.reset();
+      } catch (error) {
+        success.textContent = "We couldn't send your request. Please call or text us at (818) 423-3683.";
+        success.classList.add("visible");
+      }
+    });
+    renderInventory();
+  </script>
+</body>
+</html>
