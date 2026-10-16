@@ -220,11 +220,12 @@
     .modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; background: rgba(0,0,0,.78); opacity: 0; visibility: hidden; transition: opacity .18s ease, visibility .18s ease; backdrop-filter: blur(10px); }
     .modal.open { opacity: 1; visibility: visible; }
     .modal-card { position: relative; display: grid; grid-template-columns: 1.15fr .85fr; width: min(1060px,100%); max-height: calc(100vh - 40px); overflow: auto; border: 1px solid var(--line); border-radius: 18px; background: var(--panel); box-shadow: var(--shadow); }
-    .modal-gallery { position: sticky; top: 0; min-height: 610px; background: var(--panel-2); }
-    .modal-image { width: 100%; height: 100%; object-fit: cover; }
+    .modal-gallery { position: sticky; top: 0; min-height: 610px; background: #08080a; }
+    .modal-image { width: 100%; height: 100%; object-fit: contain; cursor: zoom-in; }
     .modal-placeholder { display: grid; width: 100%; height: 100%; min-height: inherit; place-items: center; background: radial-gradient(circle at 72% 18%, rgba(214,255,79,.18), transparent 32%), linear-gradient(145deg, #29292e, #121215); text-align: center; }
     .gallery-nav { position: absolute; inset: auto 18px 18px; display: flex; justify-content: space-between; }
     .gallery-button { display: grid; width: 44px; height: 44px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: rgba(11,11,13,.75); color: var(--text); backdrop-filter: blur(8px); }
+    .gallery-meta { position: absolute; left: 50%; bottom: 23px; transform: translateX(-50%); border: 1px solid var(--line); border-radius: 999px; background: rgba(11,11,13,.78); padding: 6px 11px; color: var(--muted); font-size: 11px; backdrop-filter: blur(8px); }
     .modal-content { padding: 38px; }
     .modal-close { position: absolute; z-index: 2; top: 14px; right: 14px; display: grid; width: 40px; height: 40px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: rgba(11,11,13,.8); color: var(--text); font-size: 22px; }
     .modal-content h2 { margin-bottom: 6px; font-size: 36px; }
@@ -237,6 +238,16 @@
     .feature-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 18px 0 28px; padding: 0; list-style: none; color: var(--muted); font-size: 13px; }
     .feature-list li::before { content: "\2713"; margin-right: 7px; color: var(--accent); font-weight: 900; }
     .modal-actions { display: grid; gap: 9px; }
+    .share-status { min-height: 18px; margin: 8px 0 0; color: var(--muted); font-size: 12px; text-align: center; }
+
+    .fullscreen-viewer { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; background: rgba(0,0,0,.96); opacity: 0; visibility: hidden; transition: opacity .18s ease, visibility .18s ease; }
+    .fullscreen-viewer.open { opacity: 1; visibility: visible; }
+    .fullscreen-image { width: 100%; height: 100%; object-fit: contain; }
+    .fullscreen-close { position: absolute; z-index: 2; top: 20px; right: 20px; display: grid; width: 48px; height: 48px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: rgba(11,11,13,.78); color: var(--text); font-size: 28px; }
+    .fullscreen-button { position: absolute; z-index: 2; top: 50%; display: grid; width: 52px; height: 52px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: rgba(11,11,13,.78); color: var(--text); font-size: 24px; transform: translateY(-50%); }
+    .fullscreen-prev { left: 20px; }
+    .fullscreen-next { right: 20px; }
+    .fullscreen-counter { position: absolute; z-index: 2; bottom: 22px; left: 50%; transform: translateX(-50%); border: 1px solid var(--line); border-radius: 999px; background: rgba(11,11,13,.78); padding: 8px 13px; color: var(--muted); font-size: 12px; }
 
     @media (max-width: 980px) {
       .nav { display: none; }
@@ -371,9 +382,17 @@
   <div id="vehicleModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
     <div class="modal-card">
       <button id="modalClose" class="modal-close" type="button" aria-label="Close vehicle details">&times;</button>
-      <div class="modal-gallery"><img id="modalImage" class="modal-image" src="" alt=""><div id="modalPlaceholder" class="modal-placeholder" hidden><div class="vehicle-placeholder-inner"><span id="modalPlaceholderMark" class="vehicle-placeholder-mark"></span><span id="modalPlaceholderName" class="vehicle-placeholder-name"></span></div></div><div class="gallery-nav"><button id="galleryPrev" class="gallery-button" type="button" aria-label="Previous photo">&larr;</button><button id="galleryNext" class="gallery-button" type="button" aria-label="Next photo">&rarr;</button></div></div>
-      <div class="modal-content"><p id="modalBadge" class="kicker"></p><h2 id="modalTitle"></h2><p id="modalTrim" class="vehicle-trim"></p><div id="modalPrice" class="modal-price"></div><p id="modalDescription" class="modal-description"></p><div id="modalSpecs" class="modal-specs"></div><h3>Highlights</h3><ul id="modalFeatures" class="feature-list"></ul><div class="modal-actions"><button id="modalInquiry" class="button button-primary" type="button">Ask About This Vehicle</button><a class="button button-ghost" href="tel:+18184233683">Call (818) 423-3683</a></div></div>
+      <div class="modal-gallery"><img id="modalImage" class="modal-image" src="" alt="" title="View full size"><div id="modalPlaceholder" class="modal-placeholder" hidden><div class="vehicle-placeholder-inner"><span id="modalPlaceholderMark" class="vehicle-placeholder-mark"></span><span id="modalPlaceholderName" class="vehicle-placeholder-name"></span></div></div><div class="gallery-nav"><button id="galleryPrev" class="gallery-button" type="button" aria-label="Previous photo">&larr;</button><button id="galleryNext" class="gallery-button" type="button" aria-label="Next photo">&rarr;</button></div><span id="galleryMeta" class="gallery-meta" hidden></span></div>
+      <div class="modal-content"><p id="modalBadge" class="kicker"></p><h2 id="modalTitle"></h2><p id="modalTrim" class="vehicle-trim"></p><div id="modalPrice" class="modal-price"></div><p id="modalDescription" class="modal-description"></p><div id="modalSpecs" class="modal-specs"></div><h3>Highlights</h3><ul id="modalFeatures" class="feature-list"></ul><div class="modal-actions"><button id="modalInquiry" class="button button-primary" type="button">Ask About This Vehicle</button><button id="shareListing" class="button button-ghost" type="button">Share Listing</button><a class="button button-ghost" href="tel:+18184233683">Call (818) 423-3683</a></div><p id="shareStatus" class="share-status" aria-live="polite"></p></div>
     </div>
+  </div>
+
+  <div id="fullscreenViewer" class="fullscreen-viewer" role="dialog" aria-modal="true" aria-label="Full-size vehicle photo" aria-hidden="true">
+    <button id="fullscreenClose" class="fullscreen-close" type="button" aria-label="Close full-size photo">&times;</button>
+    <button id="fullscreenPrev" class="fullscreen-button fullscreen-prev" type="button" aria-label="Previous photo">&larr;</button>
+    <img id="fullscreenImage" class="fullscreen-image" src="" alt="">
+    <button id="fullscreenNext" class="fullscreen-button fullscreen-next" type="button" aria-label="Next photo">&rarr;</button>
+    <span id="fullscreenCounter" class="fullscreen-counter"></span>
   </div>
 
   <script>
@@ -409,12 +428,28 @@
     const bodyFilter = document.querySelector("#bodyFilter");
     const priceFilter = document.querySelector("#priceFilter");
     const modal = document.querySelector("#vehicleModal");
+    const fullscreenViewer = document.querySelector("#fullscreenViewer");
     const vehicleSelect = document.querySelector("#vehicleSelect");
     let activeVehicle = null;
     let galleryIndex = 0;
+    const defaultTitle = document.title;
 
     const money = value => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
     const number = value => new Intl.NumberFormat("en-US").format(value);
+
+    function listingUrl(id, absolute = false) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("vehicle", id);
+      url.hash = "inventory";
+      return absolute ? url.href : `${url.pathname}${url.search}${url.hash}`;
+    }
+
+    function setListingUrl(id) {
+      const url = new URL(window.location.href);
+      if (id) url.searchParams.set("vehicle", id); else url.searchParams.delete("vehicle");
+      url.hash = "inventory";
+      window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+    }
 
     function renderInventory() {
       const query = search.value.toLowerCase().trim();
@@ -429,15 +464,36 @@
         const media = vehicle.images.length
           ? `<img class="vehicle-image" src="${vehicle.images[0]}" alt="${vehicle.year} ${vehicle.make} ${vehicle.model}">`
           : `<div class="vehicle-placeholder"><div class="vehicle-placeholder-inner"><span class="vehicle-placeholder-mark">${vehicle.make.slice(0, 3).toUpperCase()}</span><span class="vehicle-placeholder-name">Photos coming soon</span></div></div>`;
-        card.innerHTML = `<div class="vehicle-image-wrap" data-details="${vehicle.id}">${media}<span class="vehicle-badge">${vehicle.badge}</span><span class="photo-count">${vehicle.images.length ? `${vehicle.images.length} photos` : "Details"}</span></div><div class="vehicle-body"><div class="vehicle-title-row"><div><h3 class="vehicle-title">${vehicle.year} ${vehicle.make} ${vehicle.model}</h3><p class="vehicle-trim">${vehicle.trim}</p></div><strong class="vehicle-price">${money(vehicle.price)}</strong></div><div class="vehicle-specs"><div class="spec"><span>Mileage</span><strong>${number(vehicle.miles)} mi</strong></div><div class="spec"><span>Stock</span><strong>${vehicle.stock}</strong></div><div class="spec"><span>Body</span><strong>${vehicle.body}</strong></div></div><div class="card-actions"><button class="button button-ghost" type="button" data-details="${vehicle.id}">View Details</button><button class="button button-primary" type="button" data-inquire="${vehicle.id}">I'm Interested</button></div></div>`;
+        const href = listingUrl(vehicle.id);
+        card.innerHTML = `<a class="vehicle-image-wrap" href="${href}" data-details="${vehicle.id}">${media}<span class="vehicle-badge">${vehicle.badge}</span><span class="photo-count">${vehicle.images.length ? `${vehicle.images.length} photos` : "Details"}</span></a><div class="vehicle-body"><div class="vehicle-title-row"><div><h3 class="vehicle-title">${vehicle.year} ${vehicle.make} ${vehicle.model}</h3><p class="vehicle-trim">${vehicle.trim}</p></div><strong class="vehicle-price">${money(vehicle.price)}</strong></div><div class="vehicle-specs"><div class="spec"><span>Mileage</span><strong>${number(vehicle.miles)} mi</strong></div><div class="spec"><span>Stock</span><strong>${vehicle.stock}</strong></div><div class="spec"><span>Body</span><strong>${vehicle.body}</strong></div></div><div class="card-actions"><a class="button button-ghost" href="${href}" data-details="${vehicle.id}">View Details</a><button class="button button-primary" type="button" data-inquire="${vehicle.id}">I'm Interested</button></div></div>`;
         grid.appendChild(card);
       });
     }
 
-    function openModal(id) {
+    function updateGallery() {
+      if (!activeVehicle || !activeVehicle.images.length) return;
+      const image = activeVehicle.images[galleryIndex];
+      const alt = `${activeVehicle.year} ${activeVehicle.make} ${activeVehicle.model}, photo ${galleryIndex + 1}`;
+      document.querySelector("#modalImage").src = image;
+      document.querySelector("#modalImage").alt = alt;
+      document.querySelector("#fullscreenImage").src = image;
+      document.querySelector("#fullscreenImage").alt = alt;
+      document.querySelector("#galleryMeta").textContent = `${galleryIndex + 1} / ${activeVehicle.images.length} - View full size`;
+      document.querySelector("#fullscreenCounter").textContent = `${galleryIndex + 1} / ${activeVehicle.images.length}`;
+    }
+
+    function changePhoto(direction) {
+      if (!activeVehicle || !activeVehicle.images.length) return;
+      galleryIndex = (galleryIndex + direction + activeVehicle.images.length) % activeVehicle.images.length;
+      updateGallery();
+    }
+
+    function openModal(id, updateUrl = true) {
       activeVehicle = vehicles.find(vehicle => vehicle.id === id);
       if (!activeVehicle) return;
       galleryIndex = 0;
+      if (updateUrl) setListingUrl(id);
+      document.title = `${activeVehicle.year} ${activeVehicle.make} ${activeVehicle.model} | NGM Motors`;
       document.querySelector("#modalBadge").textContent = activeVehicle.badge;
       document.querySelector("#modalTitle").textContent = `${activeVehicle.year} ${activeVehicle.make} ${activeVehicle.model}`;
       document.querySelector("#modalTrim").textContent = activeVehicle.trim;
@@ -448,8 +504,7 @@
       modalImage.hidden = activeVehicle.images.length === 0;
       modalPlaceholder.hidden = activeVehicle.images.length > 0;
       if (activeVehicle.images.length) {
-        modalImage.src = activeVehicle.images[0];
-        modalImage.alt = `${activeVehicle.year} ${activeVehicle.make} ${activeVehicle.model}`;
+        updateGallery();
       } else {
         modalImage.removeAttribute("src");
         modalImage.alt = "";
@@ -457,23 +512,43 @@
         document.querySelector("#modalPlaceholderName").textContent = "Photos coming soon";
       }
       document.querySelector(".gallery-nav").hidden = activeVehicle.images.length < 2;
+      document.querySelector("#galleryMeta").hidden = activeVehicle.images.length === 0;
+      document.querySelector("#shareStatus").textContent = "";
       document.querySelector("#modalSpecs").innerHTML = [["Mileage", `${number(activeVehicle.miles)} miles`],["Stock Number", activeVehicle.stock],["VIN", activeVehicle.vin],["Drivetrain", activeVehicle.drivetrain],["Exterior", activeVehicle.color],["Body Style", activeVehicle.body]].map(([label,value]) => `<div class="modal-spec"><span>${label}</span><strong>${value}</strong></div>`).join("");
       document.querySelector("#modalFeatures").innerHTML = activeVehicle.features.map(feature => `<li>${feature}</li>`).join("");
       modal.classList.add("open"); modal.setAttribute("aria-hidden", "false"); document.body.classList.add("modal-open"); document.querySelector("#modalClose").focus();
     }
-    function closeModal() { modal.classList.remove("open"); modal.setAttribute("aria-hidden", "true"); document.body.classList.remove("modal-open"); }
+    function closeModal(updateUrl = true) { closeFullscreen(); modal.classList.remove("open"); modal.setAttribute("aria-hidden", "true"); document.body.classList.remove("modal-open"); document.title = defaultTitle; if (updateUrl) setListingUrl(); }
+    function openFullscreen() { if (!activeVehicle || !activeVehicle.images.length) return; updateGallery(); fullscreenViewer.classList.add("open"); fullscreenViewer.setAttribute("aria-hidden", "false"); document.querySelector("#fullscreenClose").focus(); }
+    function closeFullscreen() { fullscreenViewer.classList.remove("open"); fullscreenViewer.setAttribute("aria-hidden", "true"); }
     function selectVehicle(id) { const vehicle = vehicles.find(item => item.id === id); vehicleSelect.value = id; closeModal(); document.querySelector("#contact").scrollIntoView({ behavior: "smooth" }); setTimeout(() => document.querySelector('#leadForm input[name="name"]').focus(), 550); }
 
     vehicles.forEach(vehicle => { const option = document.createElement("option"); option.value = vehicle.id; option.textContent = `${vehicle.year} ${vehicle.make} ${vehicle.model}`; vehicleSelect.appendChild(option); });
-    grid.addEventListener("click", event => { const details = event.target.closest("[data-details]"); const inquiry = event.target.closest("[data-inquire]"); if (details) openModal(details.dataset.details); if (inquiry) selectVehicle(inquiry.dataset.inquire); });
+    grid.addEventListener("click", event => { const details = event.target.closest("[data-details]"); const inquiry = event.target.closest("[data-inquire]"); if (details) { event.preventDefault(); openModal(details.dataset.details); } if (inquiry) selectVehicle(inquiry.dataset.inquire); });
     [search, bodyFilter, priceFilter].forEach(control => control.addEventListener("input", renderInventory));
     document.querySelector("#clearFilters").addEventListener("click", () => { search.value = ""; bodyFilter.value = ""; priceFilter.value = ""; renderInventory(); });
     document.querySelector("#modalClose").addEventListener("click", closeModal);
     modal.addEventListener("click", event => { if (event.target === modal) closeModal(); });
-    document.addEventListener("keydown", event => { if (event.key === "Escape") closeModal(); });
+    document.querySelector("#modalImage").addEventListener("click", openFullscreen);
+    document.querySelector("#fullscreenClose").addEventListener("click", closeFullscreen);
+    fullscreenViewer.addEventListener("click", event => { if (event.target === fullscreenViewer) closeFullscreen(); });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") { if (fullscreenViewer.classList.contains("open")) closeFullscreen(); else if (modal.classList.contains("open")) closeModal(); }
+      if (event.key === "ArrowLeft" && (modal.classList.contains("open") || fullscreenViewer.classList.contains("open"))) changePhoto(-1);
+      if (event.key === "ArrowRight" && (modal.classList.contains("open") || fullscreenViewer.classList.contains("open"))) changePhoto(1);
+    });
     document.querySelector("#modalInquiry").addEventListener("click", () => selectVehicle(activeVehicle.id));
-    document.querySelector("#galleryPrev").addEventListener("click", () => { galleryIndex = galleryIndex ? galleryIndex - 1 : activeVehicle.images.length - 1; document.querySelector("#modalImage").src = activeVehicle.images[galleryIndex]; });
-    document.querySelector("#galleryNext").addEventListener("click", () => { galleryIndex = (galleryIndex + 1) % activeVehicle.images.length; document.querySelector("#modalImage").src = activeVehicle.images[galleryIndex]; });
+    document.querySelector("#galleryPrev").addEventListener("click", () => changePhoto(-1));
+    document.querySelector("#galleryNext").addEventListener("click", () => changePhoto(1));
+    document.querySelector("#fullscreenPrev").addEventListener("click", () => changePhoto(-1));
+    document.querySelector("#fullscreenNext").addEventListener("click", () => changePhoto(1));
+    document.querySelector("#shareListing").addEventListener("click", async () => {
+      const shareData = { title: `${activeVehicle.year} ${activeVehicle.make} ${activeVehicle.model} | NGM Motors`, text: `${activeVehicle.year} ${activeVehicle.make} ${activeVehicle.model} - ${money(activeVehicle.price)}`, url: listingUrl(activeVehicle.id, true) };
+      const status = document.querySelector("#shareStatus");
+      try {
+        if (navigator.share) await navigator.share(shareData); else { await navigator.clipboard.writeText(shareData.url); status.textContent = "Listing link copied."; }
+      } catch (error) { if (error.name !== "AbortError") status.textContent = "Copy the listing URL from your browser's address bar."; }
+    });
     document.querySelector("#leadForm").addEventListener("submit", async event => {
       event.preventDefault();
       const form = event.currentTarget;
@@ -491,6 +566,8 @@
       }
     });
     renderInventory();
+    const requestedVehicle = new URLSearchParams(window.location.search).get("vehicle");
+    if (requestedVehicle && vehicles.some(vehicle => vehicle.id === requestedVehicle)) openModal(requestedVehicle, false);
   </script>
 </body>
 </html>
