@@ -381,7 +381,27 @@
       { id: "sonata-hybrid", stock: "CP1139", vin: "KMHL24JJ7PA055891", year: 2023, make: "Hyundai", model: "Sonata Hybrid", trim: "Blue Sedan 4D", body: "Sedan", price: 8300, miles: 86942, drivetrain: "Not listed", color: "Not listed", badge: "Hybrid Value", images: [], description: "A fuel-efficient midsize hybrid sedan now available from NGM Motors. Contact our team for condition details, additional photos, and a viewing appointment.", features: ["Hybrid powertrain", "In inventory", "Available now", "Stock CP1139"] },
       { id: "audi-q5", stock: "TR11102", vin: "WA1BNAFY4J2013783", year: 2018, make: "Audi", model: "Q5 Premium Plus", trim: "Sport Utility 4D", body: "SUV", price: 18950, miles: 78053, drivetrain: "Not listed", color: "Not listed", badge: "Clean History", images: [], description: "A premium compact SUV with a clean reported accident history. Contact our team for condition details, additional photos, and a viewing appointment.", features: ["AutoCheck score 81", "0 reported accidents", "Odometer assured", "Title brand assured", "5 reported owners", "Stock TR11102"] },
       { id: "audi-a6", stock: "NH9866", vin: "WAUK2AF28KN059866", year: 2019, make: "Audi", model: "A6 55 TFSI Premium", trim: "Sedan 4D", body: "Sedan", price: 3999, miles: 75030, drivetrain: "Not listed", color: "Not listed", badge: "Available Now", images: [], description: "A well-equipped premium sedan with a clean reported accident history. Contact our team to confirm pricing, condition, and availability before visiting.", features: ["AutoCheck score 85", "0 reported accidents", "Odometer assured", "Title brand assured", "2 reported owners", "Stock NH9866"] },
-      { id: "bmw-x5", stock: "40370", vin: "5UXCR4C05M9E40370", year: 2021, make: "BMW", model: "X5 xDrive40i", trim: "Sport Utility 4D", body: "SUV", price: 38949, miles: 54302, drivetrain: "AWD", color: "Not listed", badge: "Premium SUV", images: [], description: "A spacious premium SUV with a clean reported accident history and xDrive all-wheel drive. Contact our team for additional photos and a viewing appointment.", features: ["AutoCheck score 88", "0 reported accidents", "Odometer assured", "Title brand assured", "3 reported owners", "Stock 40370"] }
+      { id: "bmw-x5", stock: "40370", vin: "5UXCR4C05M9E40370", year: 2021, make: "BMW", model: "X5 xDrive40i", trim: "Sport Utility 4D", body: "SUV", price: 38949, miles: 54302, drivetrain: "AWD", color: "White", badge: "Premium SUV", images: [
+        "assets/inventory/bmw-x5-40370/01-front-three-quarter.jpg",
+        "assets/inventory/bmw-x5-40370/02-front-three-quarter-low.jpg",
+        "assets/inventory/bmw-x5-40370/03-front.jpg",
+        "assets/inventory/bmw-x5-40370/04-front-passenger-side.jpg",
+        "assets/inventory/bmw-x5-40370/05-driver-profile.jpg",
+        "assets/inventory/bmw-x5-40370/06-rear-driver-side.jpg",
+        "assets/inventory/bmw-x5-40370/07-rear-passenger-side.jpg",
+        "assets/inventory/bmw-x5-40370/08-rear.jpg",
+        "assets/inventory/bmw-x5-40370/09-rear-close.jpg",
+        "assets/inventory/bmw-x5-40370/10-front-interior.jpg",
+        "assets/inventory/bmw-x5-40370/11-driver-cockpit.jpg",
+        "assets/inventory/bmw-x5-40370/12-rear-seats.jpg",
+        "assets/inventory/bmw-x5-40370/13-panoramic-roof.jpg",
+        "assets/inventory/bmw-x5-40370/14-front-seats-console.jpg",
+        "assets/inventory/bmw-x5-40370/15-harman-kardon-controls.jpg",
+        "assets/inventory/bmw-x5-40370/16-laser-headlight.jpg",
+        "assets/inventory/bmw-x5-40370/17-mirror-camera.jpg",
+        "assets/inventory/bmw-x5-40370/18-crystal-shifter.jpg",
+        "assets/inventory/bmw-x5-40370/19-surround-view-camera.jpg"
+      ], description: "A spacious premium SUV with a clean reported accident history and xDrive all-wheel drive. Finished in white with a light interior and a well-equipped premium cabin.", features: ["AutoCheck score 88", "0 reported accidents", "xDrive all-wheel drive", "Panoramic roof", "Harman Kardon audio", "Surround-view camera", "BMW Laser headlights", "Stock 40370"] }
     ];
 
     const grid = document.querySelector("#inventoryGrid");
@@ -409,7 +429,7 @@
         const media = vehicle.images.length
           ? `<img class="vehicle-image" src="${vehicle.images[0]}" alt="${vehicle.year} ${vehicle.make} ${vehicle.model}">`
           : `<div class="vehicle-placeholder"><div class="vehicle-placeholder-inner"><span class="vehicle-placeholder-mark">${vehicle.make.slice(0, 3).toUpperCase()}</span><span class="vehicle-placeholder-name">Photos coming soon</span></div></div>`;
-        card.innerHTML = `<div class="vehicle-image-wrap" data-details="${vehicle.id}">${media}<span class="vehicle-badge">${vehicle.badge}</span><span class="photo-count">${vehicle.images.length ? "View photos" : "Details"}</span></div><div class="vehicle-body"><div class="vehicle-title-row"><div><h3 class="vehicle-title">${vehicle.year} ${vehicle.make} ${vehicle.model}</h3><p class="vehicle-trim">${vehicle.trim}</p></div><strong class="vehicle-price">${money(vehicle.price)}</strong></div><div class="vehicle-specs"><div class="spec"><span>Mileage</span><strong>${number(vehicle.miles)} mi</strong></div><div class="spec"><span>Stock</span><strong>${vehicle.stock}</strong></div><div class="spec"><span>Body</span><strong>${vehicle.body}</strong></div></div><div class="card-actions"><button class="button button-ghost" type="button" data-details="${vehicle.id}">View Details</button><button class="button button-primary" type="button" data-inquire="${vehicle.id}">I'm Interested</button></div></div>`;
+        card.innerHTML = `<div class="vehicle-image-wrap" data-details="${vehicle.id}">${media}<span class="vehicle-badge">${vehicle.badge}</span><span class="photo-count">${vehicle.images.length ? `${vehicle.images.length} photos` : "Details"}</span></div><div class="vehicle-body"><div class="vehicle-title-row"><div><h3 class="vehicle-title">${vehicle.year} ${vehicle.make} ${vehicle.model}</h3><p class="vehicle-trim">${vehicle.trim}</p></div><strong class="vehicle-price">${money(vehicle.price)}</strong></div><div class="vehicle-specs"><div class="spec"><span>Mileage</span><strong>${number(vehicle.miles)} mi</strong></div><div class="spec"><span>Stock</span><strong>${vehicle.stock}</strong></div><div class="spec"><span>Body</span><strong>${vehicle.body}</strong></div></div><div class="card-actions"><button class="button button-ghost" type="button" data-details="${vehicle.id}">View Details</button><button class="button button-primary" type="button" data-inquire="${vehicle.id}">I'm Interested</button></div></div>`;
         grid.appendChild(card);
       });
     }
