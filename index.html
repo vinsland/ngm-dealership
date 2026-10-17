@@ -172,6 +172,7 @@
     .vehicle-placeholder-mark { display: block; margin-bottom: 8px; color: rgba(255,255,255,.08); font-size: clamp(58px,8vw,94px); font-weight: 950; line-height: .9; letter-spacing: -.08em; }
     .vehicle-placeholder-name { color: var(--muted); font-size: 12px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
     .vehicle-badge { position: absolute; left: 14px; top: 14px; border-radius: 999px; background: var(--accent); color: var(--ink); padding: 7px 11px; font-size: 10px; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
+    .vehicle-image-price { position: absolute; right: 14px; top: 14px; border: 1px solid rgba(255,255,255,.18); border-radius: 9px; background: rgba(11,11,13,.9); color: var(--accent); padding: 8px 12px; font-size: 19px; font-weight: 950; line-height: 1; letter-spacing: -.02em; box-shadow: 0 8px 24px rgba(0,0,0,.3); backdrop-filter: blur(10px); }
     .photo-count { position: absolute; right: 14px; bottom: 14px; border: 1px solid var(--line); border-radius: 999px; background: rgba(11,11,13,.75); padding: 6px 10px; font-size: 11px; backdrop-filter: blur(10px); }
     .vehicle-body { padding: 20px; }
     .vehicle-title-row { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
@@ -322,7 +323,7 @@
             <span class="hero-inventory-label">4 vehicles available</span>
             <div class="hero-inventory-item"><span>2023 Hyundai Sonata Hybrid</span><strong>$8,300</strong></div>
             <div class="hero-inventory-item"><span>2018 Audi Q5 Premium Plus</span><strong>$18,950</strong></div>
-            <div class="hero-inventory-item"><span>2019 Audi A6 55 TFSI</span><strong>$3,999</strong></div>
+            <div class="hero-inventory-item"><span>2019 Audi A6 55 TFSI</span><strong>$17,650</strong></div>
             <div class="hero-inventory-item"><span>2021 BMW X5 xDrive40i</span><strong>$38,949</strong></div>
           </div>
         </div>
@@ -525,7 +526,7 @@
           ? `<img class="vehicle-image" src="${vehicle.images[0]}" alt="${vehicle.year} ${vehicle.make} ${vehicle.model}">`
           : `<div class="vehicle-placeholder"><div class="vehicle-placeholder-inner"><span class="vehicle-placeholder-mark">${vehicle.make.slice(0, 3).toUpperCase()}</span><span class="vehicle-placeholder-name">Photos coming soon</span></div></div>`;
         const href = listingUrl(vehicle.id);
-        card.innerHTML = `<a class="vehicle-image-wrap" href="${href}" data-details="${vehicle.id}">${media}<span class="vehicle-badge">${vehicle.badge}</span><span class="photo-count">${vehicle.images.length ? `${vehicle.images.length} photos` : "Details"}</span></a><div class="vehicle-body"><div class="vehicle-title-row"><div><h3 class="vehicle-title">${vehicle.year} ${vehicle.make} ${vehicle.model}</h3><p class="vehicle-trim">${vehicle.trim}</p></div><strong class="vehicle-price">${money(vehicle.price)}</strong></div><div class="vehicle-specs"><div class="spec"><span>Mileage</span><strong>${number(vehicle.miles)} mi</strong></div><div class="spec"><span>Stock</span><strong>${vehicle.stock}</strong></div><div class="spec"><span>Body</span><strong>${vehicle.body}</strong></div></div><div class="card-actions"><a class="button button-ghost" href="${href}" data-details="${vehicle.id}">View Details</a><button class="button button-primary" type="button" data-inquire="${vehicle.id}">I'm Interested</button></div></div>`;
+        card.innerHTML = `<a class="vehicle-image-wrap" href="${href}" data-details="${vehicle.id}">${media}<span class="vehicle-badge">${vehicle.badge}</span><strong class="vehicle-image-price">${money(vehicle.price)}</strong><span class="photo-count">${vehicle.images.length ? `${vehicle.images.length} photos` : "Details"}</span></a><div class="vehicle-body"><div class="vehicle-title-row"><div><h3 class="vehicle-title">${vehicle.year} ${vehicle.make} ${vehicle.model}</h3><p class="vehicle-trim">${vehicle.trim}</p></div><strong class="vehicle-price">${money(vehicle.price)}</strong></div><div class="vehicle-specs"><div class="spec"><span>Mileage</span><strong>${number(vehicle.miles)} mi</strong></div><div class="spec"><span>Stock</span><strong>${vehicle.stock}</strong></div><div class="spec"><span>Body</span><strong>${vehicle.body}</strong></div></div><div class="card-actions"><a class="button button-ghost" href="${href}" data-details="${vehicle.id}">View Details</a><button class="button button-primary" type="button" data-inquire="${vehicle.id}">I'm Interested</button></div></div>`;
         grid.appendChild(card);
       });
     }
