@@ -136,11 +136,16 @@
     }
     .hero-inventory::before { content: "NGM"; position: absolute; right: -14px; top: -42px; color: rgba(255,255,255,.035); font-size: 180px; font-weight: 950; letter-spacing: -.09em; }
     .hero-inventory-label { position: relative; margin-bottom: 6px; color: var(--accent); font-size: 11px; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
-    .hero-carousel { position: relative; min-height: 155px; overflow: hidden; }
+    .hero-carousel { position: relative; min-height: 310px; overflow: hidden; border-radius: 12px; }
     .hero-carousel-track { display: flex; height: 100%; transition: transform .45s ease; }
-    .hero-inventory-item { display: grid; flex: 0 0 100%; align-content: center; gap: 10px; min-width: 100%; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.045); padding: 24px; color: var(--text); }
-    .hero-inventory-item span { font-size: 21px; font-weight: 850; line-height: 1.15; }
-    .hero-inventory-item strong { color: var(--accent); font-size: 29px; white-space: nowrap; }
+    .hero-inventory-item { position: relative; display: flex; flex: 0 0 100%; align-items: flex-end; min-width: 100%; min-height: 310px; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #202024; color: var(--text); }
+    .hero-inventory-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+    .hero-inventory-item:hover .hero-inventory-image { transform: scale(1.035); }
+    .hero-inventory-placeholder { position: absolute; inset: 0; display: grid; place-items: center; background: radial-gradient(circle at 70% 15%, rgba(214,255,79,.22), transparent 36%), linear-gradient(145deg, #303037, #111114); color: rgba(255,255,255,.08); font-size: 100px; font-weight: 950; letter-spacing: -.08em; }
+    .hero-inventory-item::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(8,8,10,.25) 55%, rgba(8,8,10,.96) 100%); }
+    .hero-inventory-copy { position: relative; z-index: 1; display: grid; width: 100%; gap: 6px; padding: 24px; }
+    .hero-inventory-copy span { max-width: 85%; font-size: 21px; font-weight: 850; line-height: 1.15; text-shadow: 0 2px 16px rgba(0,0,0,.7); }
+    .hero-inventory-copy strong { color: var(--accent); font-size: 29px; white-space: nowrap; text-shadow: 0 2px 16px rgba(0,0,0,.7); }
     .hero-carousel-controls { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
     .hero-carousel-button { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: rgba(255,255,255,.055); color: var(--text); font-size: 18px; }
     .hero-carousel-dots { display: flex; justify-content: center; gap: 7px; }
@@ -533,7 +538,12 @@
       let timer;
 
       document.querySelector("#heroInventoryLabel").textContent = `${vehicles.length} vehicles available`;
-      track.innerHTML = vehicles.map(vehicle => `<a class="hero-inventory-item" href="${listingUrl(vehicle.id)}" data-details="${vehicle.id}"><span>${vehicle.year} ${vehicle.make} ${vehicle.model}</span><strong>${money(vehicle.price)}</strong></a>`).join("");
+      track.innerHTML = vehicles.map(vehicle => {
+        const media = vehicle.images.length
+          ? `<img class="hero-inventory-image" src="${vehicle.images[0]}" alt="${vehicle.year} ${vehicle.make} ${vehicle.model}">`
+          : `<div class="hero-inventory-placeholder" aria-hidden="true">${vehicle.make.slice(0, 3).toUpperCase()}</div>`;
+        return `<a class="hero-inventory-item" href="${listingUrl(vehicle.id)}" data-details="${vehicle.id}">${media}<span class="hero-inventory-copy"><span>${vehicle.year} ${vehicle.make} ${vehicle.model}</span><strong>${money(vehicle.price)}</strong></span></a>`;
+      }).join("");
       dots.innerHTML = vehicles.map((vehicle, dotIndex) => `<button class="hero-carousel-dot${dotIndex === 0 ? " active" : ""}" type="button" data-carousel-index="${dotIndex}" aria-label="Show ${vehicle.year} ${vehicle.make} ${vehicle.model}"></button>`).join("");
 
       const show = nextIndex => {
