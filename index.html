@@ -136,9 +136,16 @@
     }
     .hero-inventory::before { content: "NGM"; position: absolute; right: -14px; top: -42px; color: rgba(255,255,255,.035); font-size: 180px; font-weight: 950; letter-spacing: -.09em; }
     .hero-inventory-label { position: relative; margin-bottom: 6px; color: var(--accent); font-size: 11px; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
-    .hero-inventory-item { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 18px; border: 1px solid var(--line); border-radius: 9px; background: rgba(255,255,255,.045); padding: 13px 15px; }
-    .hero-inventory-item span { font-size: 13px; font-weight: 800; }
-    .hero-inventory-item strong { color: var(--accent); font-size: 13px; white-space: nowrap; }
+    .hero-carousel { position: relative; min-height: 155px; overflow: hidden; }
+    .hero-carousel-track { display: flex; height: 100%; transition: transform .45s ease; }
+    .hero-inventory-item { display: grid; flex: 0 0 100%; align-content: center; gap: 10px; min-width: 100%; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.045); padding: 24px; color: var(--text); }
+    .hero-inventory-item span { font-size: 21px; font-weight: 850; line-height: 1.15; }
+    .hero-inventory-item strong { color: var(--accent); font-size: 29px; white-space: nowrap; }
+    .hero-carousel-controls { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .hero-carousel-button { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: rgba(255,255,255,.055); color: var(--text); font-size: 18px; }
+    .hero-carousel-dots { display: flex; justify-content: center; gap: 7px; }
+    .hero-carousel-dot { width: 7px; height: 7px; border: 0; border-radius: 50%; background: rgba(255,255,255,.25); padding: 0; }
+    .hero-carousel-dot.active { background: var(--accent); }
     .hero-card { position: absolute; right: -18px; bottom: 24px; width: min(310px, 78%); border: 1px solid var(--line); border-radius: var(--radius); background: rgba(15,15,17,.88); padding: 22px; backdrop-filter: blur(18px); box-shadow: var(--shadow); }
     .hero-card-label { margin-bottom: 7px; color: var(--accent); font-size: 11px; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
     .hero-card strong { display: block; margin-bottom: 3px; font-size: 22px; }
@@ -320,11 +327,13 @@
         </div>
         <div class="hero-visual">
           <div class="hero-inventory">
-            <span class="hero-inventory-label">4 vehicles available</span>
-            <div class="hero-inventory-item"><span>2023 Hyundai Sonata Hybrid</span><strong>$8,300</strong></div>
-            <div class="hero-inventory-item"><span>2018 Audi Q5 Premium Plus</span><strong>$18,950</strong></div>
-            <div class="hero-inventory-item"><span>2019 Audi A6 55 TFSI</span><strong>$17,650</strong></div>
-            <div class="hero-inventory-item"><span>2021 BMW X5 xDrive40i</span><strong>$38,949</strong></div>
+            <span id="heroInventoryLabel" class="hero-inventory-label"></span>
+            <div id="heroCarousel" class="hero-carousel"><div id="heroCarouselTrack" class="hero-carousel-track"></div></div>
+            <div class="hero-carousel-controls">
+              <button id="heroCarouselPrev" class="hero-carousel-button" type="button" aria-label="Previous vehicle">&larr;</button>
+              <div id="heroCarouselDots" class="hero-carousel-dots" aria-label="Select a vehicle"></div>
+              <button id="heroCarouselNext" class="hero-carousel-button" type="button" aria-label="Next vehicle">&rarr;</button>
+            </div>
           </div>
         </div>
       </div>
@@ -406,6 +415,8 @@
 
   <script>
     const vehicles = [
+      { id: "toyota-camry-hybrid", stock: "CMXCMR1", vin: "4T1B21HK3KU518528", year: 2019, make: "Toyota", model: "Camry Hybrid SE", trim: "Sedan 4D", body: "Sedan", price: 14995, miles: 144535, drivetrain: "FWD", color: "Silver", badge: "Hybrid Value", images: ["assets/inventory/toyota-camry-cmxcmr1/01-front-three-quarter.jpg?v=2"], description: "A fuel-efficient Camry Hybrid SE with a strong AutoCheck score and no reported accidents. Available now at NGM Motors.", features: ["AutoCheck score 89", "0 reported accidents", "2 reported owners", "Odometer assured", "Title brand assured", "Hybrid powertrain", "Stock CMXCMR1"] },
+      { id: "bmw-x7", stock: "Contact us", vin: "Contact us", year: 2020, make: "BMW", model: "X7 xDrive40i", trim: "Sport Utility 4D", body: "SUV", price: 33950, miles: null, drivetrain: "AWD", color: "Black", badge: "Luxury SUV", images: ["assets/inventory/bmw-x7/01-front-three-quarter.jpg?v=1"], description: "A full-size BMW luxury SUV with xDrive all-wheel drive, three-row versatility, and a premium cabin. Contact our team for mileage, VIN, and availability details.", features: ["xDrive all-wheel drive", "Three-row luxury SUV", "Available now", "Contact us for full vehicle details"] },
       { id: "sonata-hybrid", stock: "CP1139", vin: "KMHL24JJ7PA055891", year: 2023, make: "Hyundai", model: "Sonata Hybrid", trim: "Blue Sedan 4D", body: "Sedan", price: 8300, miles: 86942, drivetrain: "Not listed", color: "Not listed", badge: "Hybrid Value", images: [], description: "A fuel-efficient midsize hybrid sedan now available from NGM Motors. Contact our team for condition details, additional photos, and a viewing appointment.", features: ["Hybrid powertrain", "In inventory", "Available now", "Stock CP1139"] },
       { id: "audi-q5", stock: "TR11102", vin: "WA1BNAFY4J2013783", year: 2018, make: "Audi", model: "Q5 Premium Plus", trim: "Sport Utility 4D", body: "SUV", price: 18950, miles: 78053, drivetrain: "AWD", color: "White", badge: "Clean History", images: [
         "assets/inventory/audi-q5-tr11102/01-img_2217.jpg?v=1",
@@ -484,6 +495,8 @@
       ], description: "A spacious premium SUV with a clean reported accident history and xDrive all-wheel drive. Finished in white with a light interior and a well-equipped premium cabin.", features: ["AutoCheck score 88", "0 reported accidents", "xDrive all-wheel drive", "Panoramic roof", "Harman Kardon audio", "Surround-view camera", "BMW Laser headlights", "Stock 40370"] }
     ];
 
+    vehicles.sort((a, b) => b.price - a.price);
+
     const grid = document.querySelector("#inventoryGrid");
     const search = document.querySelector("#search");
     const bodyFilter = document.querySelector("#bodyFilter");
@@ -512,6 +525,34 @@
       window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
     }
 
+    function initializeHeroCarousel() {
+      const track = document.querySelector("#heroCarouselTrack");
+      const dots = document.querySelector("#heroCarouselDots");
+      const carousel = document.querySelector("#heroCarousel");
+      let index = 0;
+      let timer;
+
+      document.querySelector("#heroInventoryLabel").textContent = `${vehicles.length} vehicles available`;
+      track.innerHTML = vehicles.map(vehicle => `<a class="hero-inventory-item" href="${listingUrl(vehicle.id)}" data-details="${vehicle.id}"><span>${vehicle.year} ${vehicle.make} ${vehicle.model}</span><strong>${money(vehicle.price)}</strong></a>`).join("");
+      dots.innerHTML = vehicles.map((vehicle, dotIndex) => `<button class="hero-carousel-dot${dotIndex === 0 ? " active" : ""}" type="button" data-carousel-index="${dotIndex}" aria-label="Show ${vehicle.year} ${vehicle.make} ${vehicle.model}"></button>`).join("");
+
+      const show = nextIndex => {
+        index = (nextIndex + vehicles.length) % vehicles.length;
+        track.style.transform = `translateX(-${index * 100}%)`;
+        dots.querySelectorAll(".hero-carousel-dot").forEach((dot, dotIndex) => dot.classList.toggle("active", dotIndex === index));
+      };
+      const start = () => { if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) timer = window.setInterval(() => show(index + 1), 4000); };
+      const restart = () => { window.clearInterval(timer); start(); };
+
+      document.querySelector("#heroCarouselPrev").addEventListener("click", () => { show(index - 1); restart(); });
+      document.querySelector("#heroCarouselNext").addEventListener("click", () => { show(index + 1); restart(); });
+      dots.addEventListener("click", event => { const dot = event.target.closest("[data-carousel-index]"); if (dot) { show(Number(dot.dataset.carouselIndex)); restart(); } });
+      track.addEventListener("click", event => { const details = event.target.closest("[data-details]"); if (details) { event.preventDefault(); openModal(details.dataset.details); } });
+      carousel.addEventListener("mouseenter", () => window.clearInterval(timer));
+      carousel.addEventListener("mouseleave", start);
+      start();
+    }
+
     function renderInventory() {
       const query = search.value.toLowerCase().trim();
       const body = bodyFilter.value;
@@ -526,7 +567,7 @@
           ? `<img class="vehicle-image" src="${vehicle.images[0]}" alt="${vehicle.year} ${vehicle.make} ${vehicle.model}">`
           : `<div class="vehicle-placeholder"><div class="vehicle-placeholder-inner"><span class="vehicle-placeholder-mark">${vehicle.make.slice(0, 3).toUpperCase()}</span><span class="vehicle-placeholder-name">Photos coming soon</span></div></div>`;
         const href = listingUrl(vehicle.id);
-        card.innerHTML = `<a class="vehicle-image-wrap" href="${href}" data-details="${vehicle.id}">${media}<span class="vehicle-badge">${vehicle.badge}</span><strong class="vehicle-image-price">${money(vehicle.price)}</strong><span class="photo-count">${vehicle.images.length ? `${vehicle.images.length} photos` : "Details"}</span></a><div class="vehicle-body"><div class="vehicle-title-row"><div><h3 class="vehicle-title">${vehicle.year} ${vehicle.make} ${vehicle.model}</h3><p class="vehicle-trim">${vehicle.trim}</p></div><strong class="vehicle-price">${money(vehicle.price)}</strong></div><div class="vehicle-specs"><div class="spec"><span>Mileage</span><strong>${number(vehicle.miles)} mi</strong></div><div class="spec"><span>Stock</span><strong>${vehicle.stock}</strong></div><div class="spec"><span>Body</span><strong>${vehicle.body}</strong></div></div><div class="card-actions"><a class="button button-ghost" href="${href}" data-details="${vehicle.id}">View Details</a><button class="button button-primary" type="button" data-inquire="${vehicle.id}">I'm Interested</button></div></div>`;
+        card.innerHTML = `<a class="vehicle-image-wrap" href="${href}" data-details="${vehicle.id}">${media}<span class="vehicle-badge">${vehicle.badge}</span><strong class="vehicle-image-price">${money(vehicle.price)}</strong><span class="photo-count">${vehicle.images.length ? `${vehicle.images.length} photo${vehicle.images.length === 1 ? "" : "s"}` : "Details"}</span></a><div class="vehicle-body"><div class="vehicle-title-row"><div><h3 class="vehicle-title">${vehicle.year} ${vehicle.make} ${vehicle.model}</h3><p class="vehicle-trim">${vehicle.trim}</p></div><strong class="vehicle-price">${money(vehicle.price)}</strong></div><div class="vehicle-specs"><div class="spec"><span>Mileage</span><strong>${vehicle.miles == null ? "Contact us" : `${number(vehicle.miles)} mi`}</strong></div><div class="spec"><span>Stock</span><strong>${vehicle.stock}</strong></div><div class="spec"><span>Body</span><strong>${vehicle.body}</strong></div></div><div class="card-actions"><a class="button button-ghost" href="${href}" data-details="${vehicle.id}">View Details</a><button class="button button-primary" type="button" data-inquire="${vehicle.id}">I'm Interested</button></div></div>`;
         grid.appendChild(card);
       });
     }
@@ -575,7 +616,7 @@
       document.querySelector(".gallery-nav").hidden = activeVehicle.images.length < 2;
       document.querySelector("#galleryMeta").hidden = activeVehicle.images.length === 0;
       document.querySelector("#shareStatus").textContent = "";
-      document.querySelector("#modalSpecs").innerHTML = [["Mileage", `${number(activeVehicle.miles)} miles`],["Stock Number", activeVehicle.stock],["VIN", activeVehicle.vin],["Drivetrain", activeVehicle.drivetrain],["Exterior", activeVehicle.color],["Body Style", activeVehicle.body]].map(([label,value]) => `<div class="modal-spec"><span>${label}</span><strong>${value}</strong></div>`).join("");
+      document.querySelector("#modalSpecs").innerHTML = [["Mileage", activeVehicle.miles == null ? "Contact us" : `${number(activeVehicle.miles)} miles`],["Stock Number", activeVehicle.stock],["VIN", activeVehicle.vin],["Drivetrain", activeVehicle.drivetrain],["Exterior", activeVehicle.color],["Body Style", activeVehicle.body]].map(([label,value]) => `<div class="modal-spec"><span>${label}</span><strong>${value}</strong></div>`).join("");
       document.querySelector("#modalFeatures").innerHTML = activeVehicle.features.map(feature => `<li>${feature}</li>`).join("");
       modal.classList.add("open"); modal.setAttribute("aria-hidden", "false"); document.body.classList.add("modal-open"); document.querySelector("#modalClose").focus();
     }
@@ -626,6 +667,7 @@
         success.classList.add("visible");
       }
     });
+    initializeHeroCarousel();
     renderInventory();
     const requestedVehicle = new URLSearchParams(window.location.search).get("vehicle");
     if (requestedVehicle && vehicles.some(vehicle => vehicle.id === requestedVehicle)) openModal(requestedVehicle, false);
